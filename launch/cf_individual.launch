@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- player settings -->
+  <arg name="frame" default="cf2" />
+  <arg name="uri" default="radio://0/80/1M/E7E7E7E702" />
+
+  <!-- launch files and nodes -->
+  <group ns='$(arg frame)'>
+    <!-- add crazyflie -->
+    <include file="$(find crazyflie_driver)/launch/crazyflie_add.launch">
+      <arg name="uri" value="$(arg uri)" />
+      <arg name="tf_prefix" value="$(arg frame)" />
+      <arg name="enable_logging" value="True" />
+    </include>
+
+    <!-- add controller -->
+    <include file="$(find crazyflie_controller)/launch/crazyflie2.launch">
+      <arg name="frame" value="$(arg frame)" />
+    </include>
+
+  </group>
+
+</launch>

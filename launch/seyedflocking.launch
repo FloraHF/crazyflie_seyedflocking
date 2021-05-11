@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- uris of the crazyflies
+  cf0: "radio://0/80/1M/E7E7E7E700"
+  cf1: "radio://0/80/1M/E7E7E7E701"
+  cf2: "radio://0/80/1M/E7E7E7E702"
+  cf3: "radio://0/84/1M/E7E7E7E703"
+  cf4: "radio://0/84/1M/E7E7E7E704"
+  cf5: "radio://0/88/1M/E7E7E7E705"
+  -->
+
+  <!-- please place the crazyflies at these locations: 
+  for arg traj_fname = simple:
+  agent 0:-0.5,  0.25
+  agent 1: 0.0,  0.25
+  agent 2: 0.5,  0.25
+  agent 3: 0.5, -0.25
+  agent 4: 0.0  -0.25
+  agent 5:-0.5  -0.25
+
+  for arg traj_fname = motionplanned1:
+  agent 0: 1.4, -0.35
+  agent 1: 1.2,  0.25
+  agent 2: 0.5,  0.25
+  agent 3: 0.8, -0.7
+  agent 4: 0.1  -0.6
+  agent 5:-0.9  -0.7
+
+  for arg traj_fname = motionplanned2:
+  agent 0:-0.9,   0.9
+  agent 1: 0.0,   0.65
+  agent 2: 0.4,  -0.64
+  agent 3:-1.3,   0.6
+  agent 4: 0.37   0.5
+  agent 5:-0.25  -0.6
+
+  -->
+
+  <arg name="traj_fname" default="simple"/>
+  <arg name="n_cf" default="3"/>
+  <arg name="server" default="192.168.2.230" />
+
+  <arg name="uri_0" default="radio://0/80/1M/E7E7E7E700" />
+  <arg name="uri_1" default="radio://0/80/1M/E7E7E7E701" />
+  <arg name="uri_2" default="radio://0/80/1M/E7E7E7E702" />
+
+  <arg name="frame_0" default="cf0" />
+  <arg name="frame_1" default="cf1" />
+  <arg name="frame_2" default="cf2" />
+
+    <!-- start crazyflie_client -->
+  <include file="$(find crazyflie_driver)/launch/crazyflie_server.launch">
+  </include>
+
+  <!-- run vrpn client -->
+  <include file="$(find optitrack_broadcast)/launch/optitrack_broadcast_p300.launch">
+    <arg name="server" value="$(arg server)" />
+    <arg name="frames" value="$(arg frame_0) $(arg frame_1) $(arg frame_2)" />
+    <!-- <arg name="frames" value="$(arg frame_D0) $(arg frame_I0)"/> -->
+  </include>
+  
+  <node name="seyedflocking" pkg="crazyflie_seyedflocking" type="cfflocking.py" output="screen">
+      <param name="traj_fname" value="$(arg traj_fname)"  />
+      <param name="n_cf" value="$(arg n_cf)"  />
+  </node>
+  
+  <!-- ############# launch individual agent: id=0 ###########-->  
+  <include file="$(find crazyflie_seyedflocking)/launch/cf_individual.launch"> 
+    <arg name="frame" value="$(arg frame_0)"/>
+    <arg name="uri" value="$(arg uri_0)"/>
+  </include>
+
+  <!-- ############# launch individual agent: id=1 ###########-->  
+  <include file="$(find crazyflie_seyedflocking)/launch/cf_individual.launch"> 
+    <arg name="frame" value="$(arg frame_1)"/>
+    <arg name="uri" value="$(arg uri_1)"/>
+  </include>
+
+  <!-- ############# launch individual agent: id=2 ###########-->  
+  <include file="$(find crazyflie_seyedflocking)/launch/cf_individual.launch"> 
+    <arg name="frame" value="$(arg frame_2)"/>
+    <arg name="uri" value="$(arg uri_2)"/>
+  </include>
+
+</launch>
