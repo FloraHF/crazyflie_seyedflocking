@@ -5,6 +5,8 @@ import gzip
 import numpy as np
 import rospy
 
+# from utils import norm
+
 from cfagent import CFAgent
 from crazyflie_seyedflocking.srv import DroneStatus, DroneStatusResponse
 
@@ -13,22 +15,45 @@ class CFSwarm(object):
 	def __init__(self, traj_fname='simple', ncf=1):
 
 		# cwd = os.getcwd()
-		# print('!!!!!!!!!!!!')
+		# print('!!!!!!!!!!!!', ncf)
 		# print(cwd)
 
 		datadir = '/home/flora/seyedflocking_path/'
 		# cfs = [0, 1, 2, 3, 4, 5]
-		cfs = ['cf0', 'cf1', 'cf2'][:ncf]
-		print(cfs)
+		cfs = ['cf0', 'cf1', 'cf2', 'cf3', 'cf4', 'cf5'][:ncf]
+		# print(cfs)
 
 		self.n_wpt, trajectory = self.read_trajectory(datadir+traj_fname+'.gz')
+
+		# for traj in trajectory:
+		# 	print(traj[0])
+
 		self.n_current = 0
 		self.status = 'in prep' # takeoff land towpt
 
-		self.agents = [CFAgent(i, cf, traj) for i, (cf, traj) in enumerate(zip(cfs, trajectory))]
-		
+		self.agents = []
+		# print(cfs)
+		# print(len(trajectory))
+		for i, (cf, traj) in enumerate(zip(cfs, trajectory)):
+			# print('creating !!!!!!!!!!!!', i)
+			self.agents.append(CFAgent(i, cf, traj))
+		# CFAgent(4, 'cf4', trajectory[4])		
+
+		# print(i, '?????????????')
+		# for agent in self.agents:
+		# 	print(agent.traj[0])
+
+		# for i in range(self.n_wpt):
+		# 	x1, x2, x3 = trajectory[0][i][:2], trajectory[1][i][:2], trajectory[2][i][:2]
+		# 	print(norm(x1-x2), norm(x1-x3), norm(x3-x2))
+
 		# services to set status for all agents
+		# print('!!!!!!!!!!!!!!!!!!!!!!!!!!!1')
+
 		rospy.Service('set_status_for_all', DroneStatus, self.set_status_for_all_srv_callback)
+
+		rospy.wait_for_service('set_status_for_all')
+		rospy.loginfo('found set_status_for_all service')
 
 
 	def iteration(self, event):
@@ -99,6 +124,8 @@ if __name__ == '__main__':
 
 	traj = rospy.get_param("~traj_fname", 'simple')
 	ncf = rospy.get_param("~n_cf", 1)
+
+	# print('!!!!!!!!!!', ncf)
 
 	swarm = CFSwarm(traj_fname=traj, ncf=ncf)
 

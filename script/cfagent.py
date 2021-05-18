@@ -17,6 +17,8 @@ class CFAgent(object):
 		self.cf_id = cf_id
 		self.traj = traj
 
+		rospy.loginfo('creating crazyflie agent ' + str(self) + '......................')
+
 		# publisher
 		self.cmdX_pub = rospy.Publisher('/'+self.cf_id+'/goal', PoseStamped, queue_size=1)
 

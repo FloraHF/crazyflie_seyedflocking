@@ -36,17 +36,23 @@
 
   -->
 
-  <arg name="traj_fname" default="simple"/>
-  <arg name="n_cf" default="3"/>
+  <arg name="traj_fname" default="motionplanned1"/>
+  <arg name="n_cf" default="6"/>
   <arg name="server" default="192.168.2.230" />
 
   <arg name="uri_0" default="radio://0/80/1M/E7E7E7E700" />
   <arg name="uri_1" default="radio://0/80/1M/E7E7E7E701" />
   <arg name="uri_2" default="radio://0/80/1M/E7E7E7E702" />
+  <arg name="uri_3" default="radio://0/84/1M/E7E7E7E703" />
+  <arg name="uri_4" default="radio://0/84/1M/E7E7E7E704" />
+  <arg name="uri_5" default="radio://0/88/1M/E7E7E7E705" />
 
   <arg name="frame_0" default="cf0" />
   <arg name="frame_1" default="cf1" />
   <arg name="frame_2" default="cf2" />
+  <arg name="frame_3" default="cf3" />
+  <arg name="frame_4" default="cf4" />
+  <arg name="frame_5" default="cf5" />
 
     <!-- start crazyflie_client -->
   <include file="$(find crazyflie_driver)/launch/crazyflie_server.launch">
@@ -55,7 +61,7 @@
   <!-- run vrpn client -->
   <include file="$(find optitrack_broadcast)/launch/optitrack_broadcast_p300.launch">
     <arg name="server" value="$(arg server)" />
-    <arg name="frames" value="$(arg frame_0) $(arg frame_1) $(arg frame_2)" />
+    <arg name="frames" value="$(arg frame_0) $(arg frame_1) $(arg frame_2) $(arg frame_3) $(arg frame_4) $(arg frame_5)" />
     <!-- <arg name="frames" value="$(arg frame_D0) $(arg frame_I0)"/> -->
   </include>
   
@@ -81,5 +87,27 @@
     <arg name="frame" value="$(arg frame_2)"/>
     <arg name="uri" value="$(arg uri_2)"/>
   </include>
+
+  <!-- ############# launch individual agent: id=3 ###########-->  
+  <include file="$(find crazyflie_seyedflocking)/launch/cf_individual.launch"> 
+    <arg name="frame" value="$(arg frame_3)"/>
+    <arg name="uri" value="$(arg uri_3)"/>
+  </include>
+
+  <!-- ############# launch individual agent: id=4 ###########-->  
+  <include file="$(find crazyflie_seyedflocking)/launch/cf_individual.launch"> 
+    <arg name="frame" value="$(arg frame_4)"/>
+    <arg name="uri" value="$(arg uri_4)"/>
+  </include>
+
+  <!-- ############# launch individual agent: id=5 ###########-->  
+  <include file="$(find crazyflie_seyedflocking)/launch/cf_individual.launch"> 
+    <arg name="frame" value="$(arg frame_5)"/>
+    <arg name="uri" value="$(arg uri_5)"/>
+  </include>
+
+  <node name="seyedflocking_recorder" pkg="crazyflie_seyedflocking" type="datarecorder.py" output="screen">
+      <param name="cfs" value="$(arg frame_0) $(arg frame_1) $(arg frame_2) $(arg frame_3) $(arg frame_4) $(arg frame_5)"  />
+  </node>  
 
 </launch>
