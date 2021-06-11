@@ -23,7 +23,7 @@
   agent 1: 1.2,  0.25
   agent 2: 0.5,  0.25
   agent 3: 0.8, -0.7
-  agent 4: 0.1  -0.6
+  agent 4:-0.1  -0.6
   agent 5:-0.9  -0.7
 
   for arg traj_fname = motionplanned2:
@@ -34,9 +34,33 @@
   agent 4: 0.37   0.5
   agent 5:-0.25  -0.6
 
+  for arg traj_fname = motionplanned3:
+  agent 0:-0.2,   0.9d
+  agent 1: 0.3,   0.1
+  agent 2:-0.2,  -0.2
+  agent 3:-1.0,   0.7
+  agent 4: 0.    -0.9
+  agent 5: 1.3    0.76
+
+  for arg traj_fname = motionplanned4:
+  agent 0:-1.1,  0.45
+  agent 1: 1.3,  0.45
+  agent 2: 0.0,  0.62
+  agent 3: 1.2, -0.2
+  agent 4:-1.2  -0.15
+  agent 5: 1.0  -0.86
+
+  for arg traj_fname = motionplanned5:
+  agent 0:-1.3,  0.4
+  agent 1:-0.45, 0.2
+  agent 2: 0.2,  0.6
+  agent 3: 1.2,  0.8
+  agent 4:-0.5  -0.5
+  agent 5: 0.3  -0.4
+
   -->
 
-  <arg name="traj_fname" default="motionplanned1"/>
+  <arg name="traj_fname" default="motionplanned3"/>
   <arg name="n_cf" default="6"/>
   <arg name="server" default="192.168.2.230" />
 

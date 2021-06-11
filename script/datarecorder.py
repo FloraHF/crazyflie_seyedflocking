@@ -4,7 +4,9 @@ import rospy
 
 from sensor_msgs.msg import Imu, Temperature
 from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import TwistStamped
 from std_msgs.msg import Float32
+
 
 class CFFlockingRecorder(object):
 	""" This is just a ros node that subscribes to 
@@ -26,11 +28,13 @@ class CFFlockingRecorder(object):
 		pose_topic = '/vrpn_client_node/' + cf + '/pose'
 		pres_topic = '/' + cf + '/pressure'
 		temp_topic = '/' + cf + '/temperature'
+		cmdVtemp_topic = '/' + cf + '/cmdVtemp'
 
 		self.subs[cf].append(rospy.Subscriber(imu_topic, Imu, self.generate_null_callback()))
 		self.subs[cf].append(rospy.Subscriber(pose_topic, PoseStamped, self.generate_null_callback()))
 		self.subs[cf].append(rospy.Subscriber(pres_topic, Float32, self.generate_null_callback()))
 		self.subs[cf].append(rospy.Subscriber(temp_topic, Temperature, self.generate_null_callback()))
+		self.subs[cf].append(rospy.Subscriber(cmdVtemp_topic, TwistStamped, self.generate_null_callback()))
 
 	def generate_null_callback(self):
 		def null_callback(msg):
